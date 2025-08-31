@@ -2334,23 +2334,46 @@
         }
 
         // Timer Functions
-        function startTimer() {
-            console.log('Starting timer');
-            if (!timerInterval) {
-                timerInterval = setInterval(() => {
-                    timerSeconds--;
-                    updateTimerDisplay();
-                    
-                    if (timerSeconds <= 0) {
-                        pauseTimer();
-                        showNotification('Pomodoro terminé! Prenez une pause.', 'success');
-                        if (settings.timerSound) {
-                            playSound();
-                        }
-                    }
-                }, 1000);
+function startTimer() {
+    console.log('Starting timer');
+    if (!timerInterval) {
+        timerInterval = setInterval(() => {
+            timerSeconds--;
+            updateTimerDisplay();
+            if (timerSeconds <= 0) {
+                pauseTimer();
+                showNotification('Pomodoro timer completed!');
+                if (settings.timerSound) {
+                    playSound(3); // Play sound 3 times
+                }
             }
+        }, 1000);
+    }
+}
+
+// Update the playSound function to accept a repeat parameter
+function playSound(repeatCount = 1) {
+    const sound = new Audio('path/to/your/sound.mp3'); // Replace with your sound file path
+    
+    let count = 0;
+    
+    function play() {
+        if (count < repeatCount) {
+            sound.currentTime = 0; // Reset to beginning
+            sound.play();
+            count++;
+            
+            // When the sound finishes, play it again if needed
+            sound.onended = function() {
+                if (count < repeatCount) {
+                    play();
+                }
+            };
         }
+    }
+    
+    play();
+            }
 
         function pauseTimer() {
             console.log('Pausing timer');
